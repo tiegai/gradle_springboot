@@ -1,0 +1,63 @@
+plugins {
+    id 'org.springframework.boot' version '2.3.7.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'junit:junit:4.13.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation 'com.alibaba:fastjson:1.2.9'
+    // https://mvnrepository.com/artifact/org.springframework.statemachine/spring-statemachine-core
+    implementation 'org.springframework.statemachine:spring-statemachine-core:3.1.0'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb:2.7.5")
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    implementation 'com.google.code.gson:gson:2.9.0'
+    // https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils
+    //implementation 'commons-beanutils:commons-beanutils:1.9.4'
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch';
+
+    implementation 'io.springfox:springfox-swagger2:2.10.5'
+    implementation 'io.springfox:springfox-swagger-ui:2.10.5'
+    implementation 'com.github.xiaoymin:knife4j-openapi2-spring-boot-starter:4.0.0'
+
+    //implementation 'org.springframework.boot:spring-boot-starter-redis'
+
+    // prometheus+grafana -暂时为实现
+    /*implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus:1.0.3'*/
+
+    //rabbitMQ
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.boot:spring-boot-starter'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-test
+    //testImplementation 'org.springframework.boot:spring-boot-test:1.4.0.RELEASE'
+
+    // https://mvnrepository.com/artifact/org.springframework/spring-test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:1.4.0.RELEASE'
+
+
+    // https://mvnrepository.com/artifact/com.dukescript.api/junit-browser-runner
+    testImplementation 'com.dukescript.api:junit-browser-runner:1.0'
+
+
+
+
+}
+
+test {
+    useJUnitPlatform()
+}
