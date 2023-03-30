@@ -133,7 +133,7 @@ public class RabbitmqController {
 
     // 发送延迟队列
     // 开始发消息 基于插件的延时队列  消息 延时时间
-    @GetMapping("/sendDelayedMsg/{message}/{delayedTime}")
+/*    @GetMapping("/sendDelayedMsg/{message}/{delayedTime}")
     public void sendMsg(@PathVariable String message, @PathVariable Integer delayedTime){
         System.out.println("当前时间："+new Date()+","+"发送一条时长为"+delayedTime+"ms的消息给延时队列 ==>"+message);
         //log.info("当前时间：{}, 发送一条时长为 {}ms的消息给延时队列 ==> {}", new Date(), delayedTime, message);
@@ -145,7 +145,7 @@ public class RabbitmqController {
                     msg.getMessageProperties().setDelay(delayedTime);
                     return msg;
                 });
-    }
+    }*/
 
 
 }
