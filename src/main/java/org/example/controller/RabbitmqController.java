@@ -1,6 +1,7 @@
 package org.example.controller;
 
-import org.example.rabbitMQ.config.delay.DelayedQueueConfig;
+
+import org.example.rabbitMQ.config.delay_ttl.TtlQueueConfig;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -130,6 +131,18 @@ public class RabbitmqController {
         rabbitTemplate.convertAndSend("lonelyDirectExchange", "TestDirectRouting", map);
         return "ok";
     }
+
+    /**
+     * TTL实战，模拟延迟消费
+     */
+    @GetMapping("/ttl/sendMsg/{message}")
+    public void sendMsg(@PathVariable String message){
+        //log.info("当前时间：{}, 发送一条消息：{} 给两个TTL队列", new Date(), message);
+        System.out.println("当前时间："+new Date()+", 发送一条消息："+message+"给两个TTL队列");
+        rabbitTemplate.convertAndSend(TtlQueueConfig.EXC_TTL, "key_ttl_a", "消息来自TTL为 10s 的队列 => "+message);
+        rabbitTemplate.convertAndSend(TtlQueueConfig.EXC_TTL, "key_ttl_b", "消息来自TTL为 40s 的队列 => "+message);
+    }
+
 
     // 发送延迟队列
     // 开始发消息 基于插件的延时队列  消息 延时时间

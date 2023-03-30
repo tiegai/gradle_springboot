@@ -1,13 +1,7 @@
-package org.example.rabbitMQ.receiver.delay;
+package org.example.rabbitMQ.receiver.delay_ttl;
 
 
-import com.rabbitmq.client.Channel;
-import org.example.rabbitMQ.config.delay.DelayedQueueConfig;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 
 @Component
