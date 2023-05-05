@@ -133,7 +133,7 @@ public class RabbitmqController {
     }
 
     /**
-     * TTL实战，模拟延迟消费  test git 11
+     * TTL实战，模拟延迟消费  test git 1122
      *
      * TODO 还有插件形式：安装延时队列插件x-delayed-message
      */
