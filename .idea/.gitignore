@@ -8,3 +8,7 @@
 /dataSources.local.xml
 # Zeppelin ignored files
 /ZeppelinRemoteNotebooks/
+
+# Created by .ignore support plugin (hsz.mobi)
+### Gradle template
+/.gradle/
