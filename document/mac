@@ -1,0 +1,52 @@
+Mac
+
+
+快捷键：
+rm -rf 文件夹
+command+shift+c  打开MAC的硬盘路径
+command+shift+.   打开隐藏文件
+mac打开隐藏路径
+https://blog.csdn.net/Mint6/article/details/124157524
+command+shift+G
+
+mv 旧文件 新文件    —这样修改文件名
+
+sudo vi /etc/hosts   —编辑host文件
+
+Mac-idea:
+ctrl + shift + r 替换
+ctrl + shift + f 全局搜索
+command + f 当前文件查找
+control + command + q 快速锁屏
+command+Y 删除一行
+command+N 查找类
+
+格式化代码：option+command+L
+
+
+
+Mac:
+安装多个版本JDK 并配置
+https://blog.csdn.net/qq_27990381/article/details/105859613
+https://www.jianshu.com/p/337a9d9a33c0
+切换JDK
+export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+
+安装npm后：
+修改.npmrc配置文件
+https://blog.csdn.net/weixin_38384296/article/details/116403848
+查看npm配置：npm config list
+
+
+安装brew
+https://blog.csdn.net/muyimo/article/details/125211460
+
+安装groovy
+https://blog.csdn.net/coderinchina/article/details/89599774
+
+安装grade
+https://blog.csdn.net/u014749862/article/details/48982925?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-48982925-blog-115207659.pc_relevant_vip_default&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-48982925-blog-115207659.pc_relevant_vip_default&utm_relevant_index=1
+
+安装socat
+
+

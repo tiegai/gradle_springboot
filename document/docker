@@ -1,0 +1,173 @@
+Docker
+
+1.docker是一个创建容器的工具，原则：一个容器运行一个程序
+
+MAC-Docker:安装ES 和 Kibana
+1-启动es
+docker run -e ES_JAVA_OPTS="-Xms256m -Xmx256m" -e "discovery.type=single-node" -d -p 9200:9200 -p 9300:9300 --name elasticsearch e082d8ac7e5e
+2-启动kibana:
+docker run --name kibana -e ELASTICSEARCH_HOSTS=http://host.docker.internal:9200 -p 5601:5601 -d kibana:7.16.2
+3-安装es 分词器，必须版本跟es一样
+    进入容器：docker exec -it 99e6c55876b5 bash
+    按照分词器插件：[root@99e6c55876b5 bin]# ./elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.16.2/elasticsearch-analysis-ik-7.16.2.zip
+    重启ES镜像：docker restart 99e6c55876b5
+
+
+MAC-Docker:安装Kafka
+1-启动zookeeper:
+docker run -d --restart=always --log-driver json-file --log-opt max-size=100m --log-opt max-file=2 --name zookeeper -p 2181:2181 -v /etc/localtime:/etc/localtime wurstmeister/zookeeper
+2-启动Kafka:
+docker run -d --restart=always --log-driver json-file --log-opt max-size=100m --log-opt max-file=2 --name kafka -p 9092:9092 -e KAFKA_BROKER_ID=0 -e KAFKA_ZOOKEEPER_CONNECT=host.docker.internal:2181/kafka -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://host.docker.internal:9092 -e KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092 -v /etc/localtime:/etc/localtime wurstmeister/kafka
+
+
+Elasticsearch  Mac安装：7.17版本
+1.安装：brew install elastic/tap/elasticsearch-full
+2.启动：brew services start elastic/tap/elasticsearch-full
+3.访问：http://localhost:9200/
+4.查询版本：elasticsearch --version
+
+安装kibana: 7.14 kibana必须与es版本一致，否则容易报错
+1.查询kibana: brew search kibana
+2.brew install elastic/tap/kibana-full
+3.http://localhost:5601/app/home#/
+
+
+Docker:
+1.docker stop <containerid>
+2.dokcer rm -f <containerid>
+
+启动redis： 注意双引号
+1.docker run -d --name redis -p 6379:6379 redis:latest redis-server --appendonly yes --requirepass "123456"
+* docker run -d ：后台运行
+* --name redis：服务名
+* -p 6379:6379    ： 将容器6379端口映射到主机6379端口
+* redis-server --appendonly yes：在容器执行redis-server启动命令，并打开redis持久化配置
+* --requirepass "你的密码" ：设置密码
+2.docker ps
+   获取rediscover的container_id
+3.链接 redis：docker exec -ti <containerid> redis-cli
+4.auth 你的密码
+或者直接：docker exec -ti <containerid> redis-cli -h localhost -p 6379 -a 123456
+
+本地redis，没有用户名，密码：123456
+
+
+
+Docker-mysql:
+docker images
+docker start mysql
+docker ps
+docker exec -it mysql bash
+mysql -uroot -p123456
+
+show databases
+use xxl_job
+show tables
+
+读未提交： A事务可以读取B事务未提交的数据（脏读，不可重复读，幻读）
+读已提交： A事务随时读取B事务提交后的变更数据（不可重复读，幻读）
+可重复读： A事务开启后，在A事务未提交前，B事务即使已经提交也不能被A读取，只有A事务提交后再读取时才能读取到B提交到事务后到数据（幻读）
+串行化：读写都加锁，读写冲突时，后访问的事务会等上一个事务执行提交完毕，再执行事务。（无）
+
+《幻读》：是指根据相同条件查询到数据《条数》不同
+
+— spring的事务事务隔离级别在mysql的基础上多了一个default（默认以mysql的全局事务隔离级别为主），当spring的事务隔离级别跟mysql冲突时，以spring事务隔离级别为准
+
+1. mysql中的引擎有很多种类，其中InnoDB和MyISAM引擎最常用
+2. Mysql5.5之前默认是MyISAM,之后默认InnoDB
+3. MyISAM是表锁，无死锁情况，但是效率低下
+4. InnoDB,支持行锁，支持事务
+5. InnoDB行锁上锁索引，索引分主键索引和非主键索引，若sql操作了主键索引才锁定这条主键索引，若Sql操作了非主键索引，则先锁非主键索引，再锁相关主键索引，所以相对于表锁
+6. 共享锁 - 可以同时读取，但是不能修改，《同一资源可以存在多个共享锁，共享锁兼容》 修改必须所有共享锁读释放（select * from 表名 lock in share mode）
+7. 排他锁 - 只能一个事务读取和修改（select * from 表名 for update）
+8. 死锁 - 《因为同一资源可以多个共享锁，升级排他锁必须所有共享锁都释放》A共享锁升级排他锁，B也是共享锁升级排他锁，A等待B释放共享锁才能升级排他锁，B也在等待A释放共享锁后升级排他锁，导致程序卡死，造成死锁
+9. 意向锁：意向共享锁，意向排他锁；提高一行行的去检查是否加锁的效率，事务需要获取锁之前先获取意向锁，一旦发现数据被意向锁，则新事务不能继续加锁。
+
+
+mysql在innodb才支持事务，且默认是“可重复读”隔离级别
+Mysql有两种读：快照读，当前读
+当前读：select … for update, 通过next-key lock, 在锁范围内插入数据，不能成功， 解决幻读
+快照读：MVCC方式解决幻读
+
+Undo log: 事务开始前产生，记录逻辑日志，事务再提交时不会立即删除，放到删除列表中，后台线程进行回收，记
+Redo log：防止持续化化故障时，重启mysql服务，根据redo log重做。redo是循环写覆盖
+Bin log： 记录所有数据库表结构及数据修改的二进制日志，不会记录select和show这类操作，主要用在：主从备份，数据恢复。不会覆盖使用
+
+Read view: 快照，【读已提交】每次生成新的快照；【重复读】在commit之前一致用最开始的快照
+
+
+
+
+Mac-mongoDB:(CAP,像redis一样满足CP)
+https://www.runoob.com/mongodb/nosql.html
+https://www.jianshu.com/p/9e42f56c6b2d
+1.拉取mongo的最新镜像
+docker pull mongo:latest
+2.查看mongo的镜像
+docker images
+3.运行容器
+—新容器
+docker run -itd --name mongo -p 27017:27017 mongo --auth
+—已经存在的容器
+  1.查出已经停止的容器：docker ps -a
+  2.使用命令启动容器：docker start containerId
+3. 停止容器：
+-p 27017:27010 将容器的27017端口映射到本地的27017端口,意思就说通过本地的27017端口就能访问到mongo服务
+-auth 访问容器服务时需要密码 4.查看容器信息,并且添加用户和密码
+docker ps
+MongoDB 6.0 及以上版本使用以下命令：进入容器
+docker exec -it mongo mongosh admin
+db.createUser({ user:'admin',pwd:'123456',roles:[ { role:'userAdminAnyDatabase', db: 'admin'}]});
+5.用上面创建的信息进行连接
+db.auth('admin', '123456')
+6.设置root角色，可以操作所有数据库的DML
+- 1.数据库用户角色：read、readWrite;
+- 2.数据库管理角色：dbAdmin、dbOwner、userAdmin；
+- 3.集群管理角色：clusterAdmin、clusterManager、clusterMonitor、hostManager；
+- 4.备份恢复角色：backup、restore
+- 5.所有数据库角色：readAnyDatabase、readWriteAnyDatabase、userAdminAnyDatabase、dbAdminAnyDatabase
+- 6.超级用户角色：root
+7.本地mongoDB已经创建了root/123456
+db.createUser( { user: "root", pwd: "123456", roles: [{ role: "root", db: "admin" }] });
+8.切换用户连接：
+db.auth('root', '123456')
+9-插入数据：
+db.admin.insert({"name":"cainiao"})
+
+1.获取容器docker的ip
+$docker inspect $container_name | grep IPAddress
+其中$container_name为NAME值
+
+
+draft
+docker run -d --name redis-node1 -v /Users/JCh527/apps/redis/redis.conf:/etc/redis/redis.conf -p 6380:6380 -p 16380:16380 redis --cluster-enabled yes --port 6380
+docker run -d --name redis-node2 -v /Users/JCh527/apps/redis/redis.conf:/etc/redis/redis.conf -p 6381:6381 -p 16381:16381 redis --cluster-enabled yes --port 6381
+docker run -d --name redis-node3 -v /Users/JCh527/apps/redis/redis.conf:/etc/redis/redis.conf -p 6382:6382 -p 16382:16382 redis --cluster-enabled yes --port 6382
+
+
+docker exec -it redis-node1 /bin/bash
+
+# 将192.168.3.150更改为你的宿主机ip 使用`ifconfig | grep 192.168` 查看
+# 这里不是3主3从 所以--cluster-replicas 设为0
+redis-cli --cluster create 192.168.3.150:6380 192.168.3.150:6381 192.168.3.150:6382 --cluster-replicas 0
+
+redis-cli --cluster create 127.0.0.1:6380 127.0.0.1:6381 127.0.0.1:6382 --cluster-replicas 0
+
+
+for port in `seq 6000 6005`; do
+
+  mkdir -p ./${port}/conf && PORT=${port} envsubst < ./redis-cluster.conf > ./${port}/conf/redis.conf && mkdir -p ./${port}/data;
+
+done
+
+for port in `seq 6000 6005`; do
+
+  docker run -d -ti -p ${port}:${port} -p 1${port}:1${port} -v /Users/JCh527/com/docker-redis/${port}/conf/redis.conf:/usr/local/etc/redis/redis.conf -v /Users/JCh527/com/docker-redis/${port}/data:/data  --restart always --name redis-${port} --net redis-net --sysctl net.core.somaxconn=1024 redis redis-server /usr/local/etc/redis/redis.conf;
+
+
+cd /usr/local/bin &&
+redis-cli --cluster create 192.168.0.12:6000 192.168.0.12:6001 192.168.0.12:6002 192.168.0.12:6003 192.168.0.12:6004 ip:6005 --cluster-replicas 1
+redis-cli --cluster create 10.73.34.105:6000 10.73.34.105:6001 10.73.34.105:6002 10.73.34.105:6003 10.73.34.105:6004 10.73.34.105:6005 --cluster-replicas 1
+
+
+for port in `seq 7010 7015`; do \ base=7008 \ && ip=$[port-base] \ && mkdir -p ./${port}/conf \ && PORT=${port} TEMP=${ip} envsubst < ./redis-cluster.tmpl > ./${port}/conf/redis.conf \ && mkdir -p ./${port}/data; \ done
