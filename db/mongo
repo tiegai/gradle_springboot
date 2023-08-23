@@ -1,0 +1,16 @@
+show dbs
+
+use chenDB
+db.yunfan_test.insert({"name":"张三","age":24})
+
+use test
+db.yunfan_test.insert({"name":"张三22","age":25})
+
+use admin
+db.yunfan_test.insert({"name":"张三","age":24})
+
+use config
+db.yunfan_test.insert({"name":"张三","age":24})
+
+use local
+db.yunfan_test.insert({"name":"张三","age":24})
