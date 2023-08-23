@@ -53,9 +53,6 @@ dependencies {
     // https://mvnrepository.com/artifact/com.dukescript.api/junit-browser-runner
     testImplementation 'com.dukescript.api:junit-browser-runner:1.0'
 
-
-
-
 }
 
 test {
