@@ -1,7 +1,5 @@
 package org.example.annotation;
 
-
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -16,11 +14,11 @@ public class TestClass {
         IsUser clsAno = (IsUser) clsStudent.getAnnotation(IsUser.class);
 
         //3.获取注释内容
-        System.out.println(clsAno.value());
+        System.out.println("获取注释内容:" + clsAno.value());
 
         //4.获取类的全部注释
         Annotation[] allAno = clsStudent.getAnnotations();
-        System.out.println(Arrays.stream(allAno).iterator().next().toString());
+        System.out.println("获取类的全部注释:" + Arrays.stream(allAno).iterator().next().toString());
 
         //5.获取私有属性
         Field fieldId = clsStudent.getDeclaredField("id");
@@ -30,13 +28,13 @@ public class TestClass {
         Datas fieAno = fieldId.getAnnotation(Datas.class);
 
         //7.获取注释的内容
-        System.out.println(fieAno.cilumnName());
-        System.out.println(fieAno.length());
-        System.out.println(fieAno.type());
+        System.out.println("column:" + fieAno.columnName());
+        System.out.println("length:" + fieAno.length());
+        System.out.println("type:" + fieAno.type());
 
         //8.获取属性的所有注释
         Annotation[] s = fieldId.getDeclaredAnnotations();
-        System.out.println(Arrays.stream(s).iterator().next().toString());
+        System.out.println("获取属性的所有注释:" + Arrays.stream(s).iterator().next().toString());
 
     }
 }
