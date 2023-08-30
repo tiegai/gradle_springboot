@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
  */
 @Aspect
 @Component
-//@Slf4j
+@Slf4j
 public class LogAspect {
 
     /**
@@ -26,12 +26,12 @@ public class LogAspect {
 
     @Before("logPointCut()")
     public void doBefore(){
-        System.out.println("===切面之前会执行");
+        log.info("===切面之前会执行");
     }
 
     @After("logPointCut()")
     public void doAfter(){
-        System.out.println("===切面之后会执行");
+        log.info("===切面之后会执行");
     }
 
 
@@ -50,13 +50,13 @@ public class LogAspect {
         for (Object o : params){
             builder.append(o + ";");
         }
-        System.out.println("进入方法["+methodName+"],,,参数为：" + builder.toString());
+        log.info("进入方法["+methodName+"],,,参数为：" + builder.toString());
 
         //获得注解
         Log testlog = getAnnotationLog(joinPoint);
         getControllerMethodDescription(testlog);
 
-        System.out.println(methodName + "方法执行结束");
+        log.info(methodName + "方法执行结束");
 
     }
 
@@ -83,7 +83,7 @@ public class LogAspect {
         //此处仅用来测试用，实际操作过程中，可能会有日志插表等逻辑
         String operator = testlog.operator();
         String state = testlog.state();
-        System.out.println("注解在方法内的参数 operator ： " + operator + ", state :" + state);
+        log.info("注解在方法内的参数 operator ： " + operator + ", state :" + state);
     }
 
 }
