@@ -50,7 +50,7 @@ public class LogAspect {
         for (Object o : params){
             builder.append(o + ";");
         }
-        log.info("进入方法["+methodName+"],,,参数为：" + builder.toString());
+        log.info("进入方法["+methodName+"],参数为：" + builder.toString());
 
         //获得注解
         Log testlog = getAnnotationLog(joinPoint);
