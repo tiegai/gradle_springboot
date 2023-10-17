@@ -1,10 +1,12 @@
 package org.example;
 
-import org.springframework.amqp.rabbit.annotation.EnableRabbit;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
+/*import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;*/
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@MapperScan("org.example.sharding.mapper")
 @SpringBootApplication
 public class MainApp {
     public static void main(String[] args) {
