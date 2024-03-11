@@ -30,11 +30,12 @@ public class ShardingController {
     @PostMapping("/addOrder")
     public void addOrder(){
         for (int i = 1; i <=10 ; i++) {
-            Orders orders = new Orders();
-            orders.setId(i);
-            orders.setCustomerId(i);
-            orders.setOrderType(i);
-            orders.setAmount(1000.0*i);
+            Orders orders = Orders.builder()
+                    .id(i)
+                    .customerId(i)
+                    .orderType(i)
+                    .amount(1000.0*i)
+                    .build();
             ordersMapper.insert(orders);
         }
     }
