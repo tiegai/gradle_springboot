@@ -17,7 +17,7 @@ import java.io.IOException;
 @RequestMapping("/test")
 public class TestJsonController {
 
-    //TODO do test from postman
+    //TODO do test from postman1
     @PostMapping("/user")
     public String createUser(@RequestBody String json) throws ProcessingException, IOException {
 
