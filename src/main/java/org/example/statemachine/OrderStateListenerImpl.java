@@ -10,7 +10,7 @@
 //@Component("orderStateListener")
 //@WithStateMachine(name = "orderStateMachine")
 //public class OrderStateListenerImpl{
-//
+///
 //    @OnTransition(source = "WAIT_PAYMENT", target = "WAIT_DELIVER")
 //    public boolean payTransition(Message<OrderStatusChangeEvent> message) {
 //        Order order = (Order) message.getHeaders().get("order");
