@@ -16,7 +16,7 @@ public class MainApp {
     }
 
     /**
-     * 上报application 到 Prometheus
+     * 上报application 到 Prometheus111
      */
     /*@Bean
     MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
