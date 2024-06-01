@@ -2,6 +2,8 @@ package org.example.mode.modeOfcommand;
 
 public class AddCommand implements Command{
 
+    //test
+
     private int a;
     private int b;
 
