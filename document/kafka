@@ -1,0 +1,76 @@
+Kafka
+
+Kafka 工作原理：
+*  Kafka采用pull方式读取信息，producer发送message到消息中心broker中，然后有consumer从broker中read message
+* 一个message，可以被multi个consumers同时消费
+* Kafka以topic进行组织管理，一个topic包含多个分区partition，每个partition可以理解为一个独立的日志文件
+* Kafka cluster 包含多个broker，每个broker分别存topic的不同分区partition，比如partition0（leader），partition1（follower）
+* Kafka中的message保留在partition中，partition中的message有序排列，每个partition中的message都有一个唯一的偏移量offset
+* producer可以选择将message发送到指定partition或让Kafka根据一定的负债均衡策略Strategy自动分区，同时也可以指定key,这样Kafka会根据key的hash值将message发送到对应的partition中，确保一个key的message被发送到同一个partition中，保证message的有序性。
+* consumer从Kafka的broker中订阅topic并获取分配到的partition，然后pull消费，Kafka支持多个消费组，每个消费组内的consumer共享一个topic的message，但不会重复消费message。也支持多个消费组订阅同一个topic。
+* Kafka的message的消息存储方式采用了一个预读取（Pread）的技术，提高消息的都写效率
+
+生产者：
+- 参数设置：
+1. request.required.acks= 1/0/-1
+	acks = 1 (默认)：分区leader 副本写入成功即认为消息成功写入
+	acks = 0 ：不需要等待任何服务端的响应都可认为消息成功写入
+	acks = -1/ all ： 需等待ISR中所有副本成功写入消息
+- 函数选择：
+1. 生产端掉用API发送消息时选择带回调函数的 send(msg, callback) 方法，发送出现异常时可采取相应的措施。
+
+broker：
+- 保证ISR>=2，保证ISR的副本数量
+
+消费者：
+- consumer close auto commit，改为手动commit offset，确保message可以再次消费
+- 在低一点的前提下，涉及message的重复消费，consumer需要做好message的幂等处理
+
+如何保证message的顺序性：
+1. 一个topic一个partition，最愚蠢的做法，不建议用，效率太低。
+2. 消息发送指定key，确保相同key的消息发送到同一个partition。
+
+Kafkka rebalance 机制：
+- rebalance触发条件
+* 消费者数量变化： 新消费者加入、消费者下线、消费者主动退出消费组
+* 消费组内订阅的主题或者主题的分区数量发生变化
+* 消费组对应的 GroupCoorinator 节点发生变化
+
+
+如何尽量避免非必要rebalance：
+1. 第一类非必要 Rebalance 是因为未能及时发送心跳，导致 Consumer 被“踢出”Group 而引发的。
+2. 第二类非必要 Rebalance 是 Consumer 消费时间过长导致的，Consumer 端还有一个参数，用于控制 Consumer 实际消费能力对 Rebalance 的影响，即max.poll.interval.ms参数。
+
+
+kafka分区是不是越多越好：
+
+kafka为什么不需要支持读写分离：
+1. 不像数据库，读多写少；Kafka读写的频率都差不多
+2. 数据一致性问题，读写分离时，主从同步存在一定的延迟，影响数据的一致性。
+3. Kafka中每个 broker 上的分区leader副本是均匀分配的，partition的读写操作已经均分到了各个broker
+
+kafka消息积压如何处理：
+- 产生原因
+1. producer陡增
+2. consumer 消费能力下降
+3. 消息积压是发生在所有的partition还是所有的partition都有积压情况
+- 解决方案
+* 1，2导致的积压，是暂时性的，通过多线程消费，批量消费解决
+* 3情况的积压，需要调整部署结构，处理完后再恢复
+
+Kakka为什么能有如此高的吞吐量：
+- 分区
+1. 单个topic对应多个partitions，producer写message通过负载均衡路由到不同的partition，每个partition都支持一个consumer进行消费，提高消费效率
+- 批量发送和压缩消息
+1. 批量发送
+2. 端到端压缩消息
+- 顺序读写
+1. Kafka 是个可持久化的日志服务，对于分区日志文件是顺序写，每个分区内消息是有序的。磁盘顺序访问比随机访问快很多。
+- 零拷贝
+1. 数据无效的在用户模式/内核模式间走了一圈，浪费了两次数据的复制过程。如果采用零拷贝技术，应用程序可以直接将磁盘数据传输给socket，减少了无效的两次复制过程
+
+摘要：https://zhuanlan.zhihu.com/p/510739703
+
+
+
+

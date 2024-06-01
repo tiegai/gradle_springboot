@@ -1,0 +1,43 @@
+GET _search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+POST _analyze
+{"analyzer": "ik_max_word","text": ["张三丰","数据库","手机壳"]
+}
+POST _analyze
+{"analyzer": "standard","text": ["张三丰","数据库","手机壳"]
+}
+POST _analyze
+{"analyzer": "keyword","text": ["张三丰","数据库","手机壳"]
+}
+
+PUT /nts_db_index
+{"settings": {"number_of_shards": 5, "number_of_replicas": 1}}
+
+GET /nts_db_index
+
+PUT /tmp_db_index/au_user_type/1
+{"first_name" : "wb", "last_name":"zhang", "age":25, "about":"I love to go rock climbing", "interests": [ "sports", "music"]
+}
+
+PUT /tmp_db_index/au_user_type/3
+{"first_name" : "Jane", "last_name":"Smith", "age":32, "about":"I like to collect rock albums", "interests": ["music"]
+}
+
+PUT /tmp_db_index/au_user_type/2
+{"first_name" : "Douglas", "last_name":"Fir", "age":35, "about":"I like to build cabinets", "interests": ["forestry"]
+}
+
+GET /tmp_db_index
+
+
+GET /tmp_db_index/au_user_type/_search
+
+
+GET /tmp_db_index/au_user_type/1
+
+GET /ecommerce/_search
