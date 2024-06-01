@@ -137,7 +137,7 @@ public class RabbitmqController {
      */
     @GetMapping("/ttl/sendMsg/{message}")
     public void sendMsg(@PathVariable String message){
-        //log.info("当前时间：{}, 发送一条消息：{} 给两个TTL队列", new Date(), message);
+        //System.out.println("当前时间：{}, 发送一条消息：{} 给两个TTL队列", new Date(), message);
         System.out.println("当前时间："+new Date()+", 发送一条消息："+message+"给两个TTL队列");
         rabbitTemplate.convertAndSend(TtlQueueConfig.EXC_TTL, "key_ttl_a", "消息来自TTL为 10s 的队列 => "+message);
         rabbitTemplate.convertAndSend(TtlQueueConfig.EXC_TTL, "key_ttl_b", "消息来自TTL为 40s 的队列 => "+message);
@@ -149,7 +149,7 @@ public class RabbitmqController {
 /*    @GetMapping("/sendDelayedMsg/{message}/{delayedTime}")
     public void sendMsg(@PathVariable String message, @PathVariable Integer delayedTime){
         System.out.println("当前时间："+new Date()+","+"发送一条时长为"+delayedTime+"ms的消息给延时队列 ==>"+message);
-        //log.info("当前时间：{}, 发送一条时长为 {}ms的消息给延时队列 ==> {}", new Date(), delayedTime, message);
+        //System.out.println("当前时间：{}, 发送一条时长为 {}ms的消息给延时队列 ==> {}", new Date(), delayedTime, message);
         rabbitTemplate.convertAndSend(
                 DelayedQueueConfig.DELAYED_EXCHANGE,
                 DelayedQueueConfig.DELAYED_ROUTING_KEY,
