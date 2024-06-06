@@ -18,4 +18,6 @@ public class MainApp {
     MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
         return registry -> registry.config().commonTags("application", "gradle_springboot");
     }*/
+
+    //test
 }
