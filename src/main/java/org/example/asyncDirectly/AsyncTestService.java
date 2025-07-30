@@ -12,7 +12,7 @@ public class AsyncTestService {
     public void test(){
         try{
             System.out.println(Thread.currentThread().getName() + "in test , before sleep." );
-            Thread.sleep(10000);
+            Thread.sleep(100000);
             System.out.println(Thread.currentThread().getName() + "in test , after sleep." );
         } catch (InterruptedException e) {
             System.out.println("sleep error.");

@@ -23,7 +23,7 @@ public class ESController {
 
         ESInfo byId = esInfoRepo.findById(id).get();
 
-        System.out.println(byId.getName());
+        System.out.println("id为:" + byId.getName());
 
         return JSON.toJSONString(byId);
 
