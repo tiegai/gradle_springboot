@@ -1,9 +1,8 @@
-package org.example.controller;
+package org.example.mongo.controller;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.client.MongoCursor;
-import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.example.mongo.dao.StudentDaoTypeOne;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.management.Query;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;

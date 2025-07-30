@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.mongo.controller;
 
 import io.swagger.annotations.ApiOperation;
 import org.example.mongo.request.JourneyEntity;
