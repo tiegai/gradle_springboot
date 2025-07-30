@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.rabbitMQ.controller;
 
 
 import org.example.rabbitMQ.config.delay_ttl.TtlQueueConfig;
