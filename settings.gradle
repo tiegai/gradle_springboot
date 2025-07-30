@@ -1,2 +1,3 @@
+// This file is used to define the name of the root project in a Gradle build.
 rootProject.name = 'gradle_springboot'
 
