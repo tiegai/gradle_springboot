@@ -5,6 +5,7 @@ import org.bson.codecs.ValueCodecProvider;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+// test git
 public class OpitonalTest {
 
     public static void main(String[] arg){
@@ -18,9 +19,7 @@ public class OpitonalTest {
         System.out.println(name);
         System.out.println(empty);
 
-        if(name.isPresent()){
-            System.out.println(name.get());
-        }
+        name.ifPresent(System.out::println);
 
         name.ifPresent((value)->System.out.println("length of name is : " + value.length()));
 
