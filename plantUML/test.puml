@@ -1,0 +1,12 @@
+@startuml
+actor 用户
+participant 客户端
+participant 服务器
+
+用户 -> 客户端: 发起请求
+客户端 -> 服务器: 转发请求
+activate 服务器
+服务器 --> 客户端: 返回响应
+deactivate 服务器
+客户端 --> 用户: 显示结果
+@enduml
